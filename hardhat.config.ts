@@ -6,6 +6,9 @@ const config: HardhatUserConfig = {
   paths: {
     artifacts: "../freshfood-fe/src/artifacts",
   },
+  typechain: {
+    outDir: "../freshfood-fe/src/types",
+  },
 };
 
 export default config;
