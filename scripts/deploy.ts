@@ -6,6 +6,8 @@ async function main() {
   const freshFood = await FreshFood.deploy();
 
   await freshFood.deployed();
+
+  console.log("FreshFood deployed to:", freshFood.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

@@ -48,8 +48,8 @@ contract FreshFood is ERC721, Ownable {
         newProduct.name = _name;
         newProduct.origin = _origin;
 
-        string memory ownerName = getOwner(msg.sender).name;
-        string memory ownerDecs = getOwner(msg.sender).description;
+        string memory ownerName = getOwnerByAddress(msg.sender).name;
+        string memory ownerDecs = getOwnerByAddress(msg.sender).description;
 
         newProduct.ownerList.push(Owner(ownerName, ownerDecs));
         newProduct.logList.push(Log("create", "create", "create"));
@@ -92,12 +92,19 @@ contract FreshFood is ERC721, Ownable {
     function registerOwner(
         string memory _name,
         string memory _description
-    ) public {
+    ) public returns (Owner memory) {
         Owner memory _owner = Owner(_name, _description);
         owners[msg.sender] = _owner;
+        return _owner;
     }
 
-    function getOwner(address _ownerAddr) public view returns (Owner memory) {
+    function getOwner() public view returns (Owner memory) {
+        return owners[msg.sender];
+    }
+
+    function getOwnerByAddress(
+        address _ownerAddr
+    ) public view returns (Owner memory) {
         return owners[_ownerAddr];
     }
 
@@ -132,8 +139,8 @@ contract FreshFood is ERC721, Ownable {
             "You are not the owner of this product"
         );
 
-        string memory newOwnerName = getOwner(_newOwner).name;
-        string memory newOwnerDesc = getOwner(_newOwner).description;
+        string memory newOwnerName = getOwnerByAddress(_newOwner).name;
+        string memory newOwnerDesc = getOwnerByAddress(_newOwner).description;
 
         products[_productId].ownerList.push(Owner(newOwnerName, newOwnerDesc));
         products[_productId].logList.push(
