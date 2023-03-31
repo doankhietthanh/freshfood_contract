@@ -11,7 +11,7 @@ struct Owner {
 }
 
 struct Log {
-    string url;
+    string objectId;
     string hash;
     string location; //syntax: lat_long
 }
