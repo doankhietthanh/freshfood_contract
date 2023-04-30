@@ -22,6 +22,7 @@ struct Product {
     string origin;
     Owner[] ownerList;
     Log[] logList;
+    bool verified;
 }
 
 contract FreshFood is ERC721, Ownable {
@@ -34,11 +35,26 @@ contract FreshFood is ERC721, Ownable {
     mapping(uint256 => Product) public products;
     mapping(address => Owner) public owners;
 
+    function registerOwner(
+        string memory _name,
+        string memory _description
+    ) public returns (Owner memory) {
+        require(bytes(_name).length != 0, "Name must not be empty");
+
+        Owner memory _owner = Owner(_name, _description);
+        owners[msg.sender] = _owner;
+        return _owner;
+    }
+
     function addProduct(string memory _name, string memory _origin) public {
         require(
             bytes(owners[msg.sender].name).length != 0,
             "You must register as owner first"
         );
+
+        require(bytes(_name).length != 0, "Product name must not be empty");
+
+        require(bytes(_origin).length != 0, "Product origin must not be empty");
 
         uint256 _productId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
@@ -47,6 +63,7 @@ contract FreshFood is ERC721, Ownable {
         newProduct.productId = _productId;
         newProduct.name = _name;
         newProduct.origin = _origin;
+        newProduct.verified = false;
 
         string memory ownerName = getOwnerByAddress(msg.sender).name;
         string memory ownerDecs = getOwnerByAddress(msg.sender).description;
@@ -57,6 +74,92 @@ contract FreshFood is ERC721, Ownable {
         _safeMint(msg.sender, _productId);
     }
 
+    function addLog(
+        uint256 _productId,
+        string memory _url,
+        string memory _hash,
+        string memory _location
+    ) public {
+        require(
+            ownerOf(_productId) == msg.sender,
+            "You are not the owner of this product"
+        );
+
+        require(
+            products[_productId].verified == false,
+            "Product already verified"
+        );
+
+        require(bytes(_url).length != 0, "URL must not be empty");
+
+        Log memory _log = Log(_url, _hash, _location);
+        products[_productId].logList.push(_log);
+    }
+
+    function verifyProduct(uint256 _productId) public {
+        require(
+            ownerOf(_productId) == msg.sender,
+            "You are not the owner of this product"
+        );
+        products[_productId].verified = true;
+    }
+
+    function transferProduct(uint256 _productId, address _newOwner) public {
+        require(
+            bytes(owners[_newOwner].name).length != 0,
+            "New owner must register"
+        );
+
+        require(
+            ownerOf(_productId) == msg.sender,
+            "You are not the owner of this product"
+        );
+
+        require(_newOwner != msg.sender, "You are already the owner");
+
+        require(
+            products[_productId].verified == false,
+            "Product already verified"
+        );
+
+        string memory newOwnerName = getOwnerByAddress(_newOwner).name;
+        string memory newOwnerDesc = getOwnerByAddress(_newOwner).description;
+
+        products[_productId].ownerList.push(Owner(newOwnerName, newOwnerDesc));
+        products[_productId].logList.push(
+            Log("transfer", "transfer", "transfer")
+        );
+
+        _transfer(ownerOf(_productId), _newOwner, _productId);
+    }
+
+    //GET owner
+    function getOwner() public view returns (Owner memory) {
+        return owners[msg.sender];
+    }
+
+    function getOwnerByAddress(
+        address _ownerAddr
+    ) public view returns (Owner memory) {
+        return owners[_ownerAddr];
+    }
+
+    function getCurrentOwnerOfProduct(
+        uint256 _productId
+    ) public view returns (Owner memory) {
+        return
+            products[_productId].ownerList[
+                products[_productId].ownerList.length - 1
+            ];
+    }
+
+    function getOwnersOfProduct(
+        uint256 _productId
+    ) public view returns (Owner[] memory) {
+        return products[_productId].ownerList;
+    }
+
+    //GET product
     function getProduct(
         uint256 _productId
     ) public view returns (Product memory) {
@@ -89,67 +192,13 @@ contract FreshFood is ERC721, Ownable {
         return _products2;
     }
 
-    function registerOwner(
-        string memory _name,
-        string memory _description
-    ) public returns (Owner memory) {
-        Owner memory _owner = Owner(_name, _description);
-        owners[msg.sender] = _owner;
-        return _owner;
-    }
-
-    function getOwner() public view returns (Owner memory) {
-        return owners[msg.sender];
-    }
-
-    function getOwnerByAddress(
-        address _ownerAddr
-    ) public view returns (Owner memory) {
-        return owners[_ownerAddr];
-    }
-
-    function getOwnerListFromProduct(
+    function checkProductVerified(
         uint256 _productId
-    ) public view returns (Owner[] memory) {
-        return products[_productId].ownerList;
+    ) public view returns (bool) {
+        return products[_productId].verified;
     }
 
-    function addLog(
-        uint256 _productId,
-        string memory _url,
-        string memory _hash,
-        string memory _location
-    ) public {
-        require(
-            ownerOf(_productId) == msg.sender,
-            "You are not the owner of this product"
-        );
-        Log memory _log = Log(_url, _hash, _location);
-        products[_productId].logList.push(_log);
-    }
-
-    function transferProduct(uint256 _productId, address _newOwner) public {
-        require(
-            bytes(owners[_newOwner].name).length != 0,
-            "New owner must register"
-        );
-
-        require(
-            ownerOf(_productId) == msg.sender,
-            "You are not the owner of this product"
-        );
-
-        string memory newOwnerName = getOwnerByAddress(_newOwner).name;
-        string memory newOwnerDesc = getOwnerByAddress(_newOwner).description;
-
-        products[_productId].ownerList.push(Owner(newOwnerName, newOwnerDesc));
-        products[_productId].logList.push(
-            Log("transfer", "transfer", "transfer")
-        );
-
-        _transfer(ownerOf(_productId), _newOwner, _productId);
-    }
-
+    //GET log
     function getLogs(uint256 _productId) public view returns (Log[] memory) {
         return products[_productId].logList;
     }
