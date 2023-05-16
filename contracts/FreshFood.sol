@@ -30,7 +30,9 @@ contract FreshFood is ERC721, Ownable {
 
     Counters.Counter private _tokenIdCounter;
 
-    constructor() ERC721("FreshFood", "FRF") {}
+    constructor() ERC721("FreshFood", "FRF") {
+        _tokenIdCounter._value = 10000;
+    }
 
     mapping(uint256 => Product) public products;
     mapping(address => Owner) public owners;
@@ -40,7 +42,6 @@ contract FreshFood is ERC721, Ownable {
         string memory _description
     ) public returns (Owner memory) {
         require(bytes(_name).length != 0, "Name must not be empty");
-
         Owner memory _owner = Owner(_name, _description);
         owners[msg.sender] = _owner;
         return _owner;
@@ -51,10 +52,10 @@ contract FreshFood is ERC721, Ownable {
             bytes(owners[msg.sender].name).length != 0,
             "You must register as owner first"
         );
-
-        require(bytes(_name).length != 0, "Product name must not be empty");
-
-        require(bytes(_origin).length != 0, "Product origin must not be empty");
+        require(
+            bytes(_name).length != 0 || bytes(_origin).length != 0,
+            "Product name or origin must not be empty"
+        );
 
         uint256 _productId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
@@ -67,7 +68,6 @@ contract FreshFood is ERC721, Ownable {
 
         string memory ownerName = getOwnerByAddress(msg.sender).name;
         string memory ownerDecs = getOwnerByAddress(msg.sender).description;
-
         newProduct.ownerList.push(Owner(ownerName, ownerDecs));
         newProduct.logList.push(Log("create", "create", "create"));
 
@@ -76,7 +76,7 @@ contract FreshFood is ERC721, Ownable {
 
     function addLog(
         uint256 _productId,
-        string memory _url,
+        string memory _obecjectId,
         string memory _hash,
         string memory _location
     ) public {
@@ -84,15 +84,12 @@ contract FreshFood is ERC721, Ownable {
             ownerOf(_productId) == msg.sender,
             "You are not the owner of this product"
         );
-
         require(
             products[_productId].verified == false,
             "Product already verified"
         );
 
-        require(bytes(_url).length != 0, "URL must not be empty");
-
-        Log memory _log = Log(_url, _hash, _location);
+        Log memory _log = Log(_obecjectId, _hash, _location);
         products[_productId].logList.push(_log);
     }
 
@@ -109,14 +106,11 @@ contract FreshFood is ERC721, Ownable {
             bytes(owners[_newOwner].name).length != 0,
             "New owner must register"
         );
-
         require(
             ownerOf(_productId) == msg.sender,
             "You are not the owner of this product"
         );
-
         require(_newOwner != msg.sender, "You are already the owner");
-
         require(
             products[_productId].verified == false,
             "Product already verified"
@@ -131,11 +125,6 @@ contract FreshFood is ERC721, Ownable {
         );
 
         _transfer(ownerOf(_productId), _newOwner, _productId);
-    }
-
-    //GET owner
-    function getOwner() public view returns (Owner memory) {
-        return owners[msg.sender];
     }
 
     function getOwnerByAddress(
@@ -159,19 +148,10 @@ contract FreshFood is ERC721, Ownable {
         return products[_productId].ownerList;
     }
 
-    //GET product
-    function getProduct(
+    function getProductById(
         uint256 _productId
     ) public view returns (Product memory) {
         return products[_productId];
-    }
-
-    function getProducts() public view returns (Product[] memory) {
-        Product[] memory _products = new Product[](_tokenIdCounter.current());
-        for (uint256 i = 0; i < _tokenIdCounter.current(); i++) {
-            _products[i] = products[i];
-        }
-        return _products;
     }
 
     function getProductByOwner(
@@ -199,7 +179,7 @@ contract FreshFood is ERC721, Ownable {
     }
 
     //GET log
-    function getLogs(uint256 _productId) public view returns (Log[] memory) {
+    function getLogById(uint256 _productId) public view returns (Log[] memory) {
         return products[_productId].logList;
     }
 
