@@ -153,7 +153,7 @@ contract FreshFood is ERC721, Ownable {
         return products[_productId].ownerList;
     }
 
-    function getProductById(
+    function getProduct(
         uint256 _productId
     ) public view returns (Product memory) {
         return products[_productId];
@@ -192,7 +192,7 @@ contract FreshFood is ERC721, Ownable {
     }
 
     //GET log
-    function getLogById(uint256 _productId) public view returns (Log[] memory) {
+    function getLog(uint256 _productId) public view returns (Log[] memory) {
         return products[_productId].logList;
     }
 
