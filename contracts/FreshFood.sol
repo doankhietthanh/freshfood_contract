@@ -127,6 +127,11 @@ contract FreshFood is ERC721, Ownable {
         _transfer(ownerOf(_productId), _newOwner, _productId);
     }
 
+    //GET owner
+    function getOwner() public view returns (Owner memory) {
+        return owners[msg.sender];
+    }
+
     function getOwnerByAddress(
         address _ownerAddr
     ) public view returns (Owner memory) {
@@ -170,6 +175,14 @@ contract FreshFood is ERC721, Ownable {
             _products2[i] = _products[i];
         }
         return _products2;
+    }
+
+    function getProducts() public view returns (Product[] memory) {
+        Product[] memory _products = new Product[](_tokenIdCounter.current());
+        for (uint256 i = 0; i < _tokenIdCounter.current(); i++) {
+            _products[i] = products[i];
+        }
+        return _products;
     }
 
     function checkProductVerified(
