@@ -14,6 +14,7 @@ struct Log {
     string objectId;
     string hash;
     string location; //syntax: lat_long
+    uint256 timestamp;
 }
 
 struct Product {
@@ -23,6 +24,7 @@ struct Product {
     Owner[] ownerList;
     Log[] logList;
     bool verified;
+    string image;
 }
 
 contract FreshFood is ERC721, Ownable {
@@ -30,9 +32,7 @@ contract FreshFood is ERC721, Ownable {
 
     Counters.Counter private _tokenIdCounter;
 
-    constructor() ERC721("FreshFood", "FRF") {
-        _tokenIdCounter._value = 10000;
-    }
+    constructor() ERC721("FreshFood", "FRF") {}
 
     mapping(uint256 => Product) public products;
     mapping(address => Owner) public owners;
@@ -47,7 +47,11 @@ contract FreshFood is ERC721, Ownable {
         return _owner;
     }
 
-    function addProduct(string memory _name, string memory _origin) public {
+    function addProduct(
+        string memory _name,
+        string memory _origin,
+        string memory _image
+    ) public {
         require(
             bytes(owners[msg.sender].name).length != 0,
             "You must register as owner first"
@@ -65,11 +69,14 @@ contract FreshFood is ERC721, Ownable {
         newProduct.name = _name;
         newProduct.origin = _origin;
         newProduct.verified = false;
+        newProduct.image = _image;
 
         string memory ownerName = getOwnerByAddress(msg.sender).name;
         string memory ownerDecs = getOwnerByAddress(msg.sender).description;
         newProduct.ownerList.push(Owner(ownerName, ownerDecs));
-        newProduct.logList.push(Log("create", "create", "create"));
+        newProduct.logList.push(
+            Log("create", "create", "create", block.timestamp)
+        );
 
         _safeMint(msg.sender, _productId);
     }
@@ -78,7 +85,8 @@ contract FreshFood is ERC721, Ownable {
         uint256 _productId,
         string memory _obecjectId,
         string memory _hash,
-        string memory _location
+        string memory _location,
+        uint256 _timestamp
     ) public {
         require(
             ownerOf(_productId) == msg.sender,
@@ -89,7 +97,7 @@ contract FreshFood is ERC721, Ownable {
             "Product already verified"
         );
 
-        Log memory _log = Log(_obecjectId, _hash, _location);
+        Log memory _log = Log(_obecjectId, _hash, _location, _timestamp);
         products[_productId].logList.push(_log);
     }
 
@@ -121,7 +129,7 @@ contract FreshFood is ERC721, Ownable {
 
         products[_productId].ownerList.push(Owner(newOwnerName, newOwnerDesc));
         products[_productId].logList.push(
-            Log("transfer", "transfer", "transfer")
+            Log("transfer", "transfer", "transfer", block.timestamp)
         );
 
         _transfer(ownerOf(_productId), _newOwner, _productId);
