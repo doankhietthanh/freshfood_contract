@@ -4,7 +4,7 @@ import "@nomicfoundation/hardhat-toolbox";
 const INFURA_API_KEY = "ePW1u9KOntXwqMxIlLYstlx0ZiuGGPrg";
 
 const SEPOLIA_PRIVATE_KEY =
-  "844c3fcd6824f0141c87def50180af77cf7ab62289d17d16d404c8e22d9b3b79";
+  "0x4047f34bb5cab81fefd426c7bef7938c58ba73ef85150e5eb429662b0a33d202";
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -30,6 +30,10 @@ const config: HardhatUserConfig = {
     development: {
       url: "http://localhost:8545",
       blockGasLimit: 100000000,
+    },
+    ganache: {
+      url: `http://192.168.1.7:7545`,
+      accounts: [SEPOLIA_PRIVATE_KEY],
     },
   },
 };

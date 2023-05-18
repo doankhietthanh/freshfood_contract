@@ -20,6 +20,7 @@ struct Product {
     uint256 productId;
     string name;
     string origin;
+    string url;
     Owner[] ownerList;
     Log[] logList;
     bool verified;
@@ -30,9 +31,7 @@ contract FreshFood is ERC721, Ownable {
 
     Counters.Counter private _tokenIdCounter;
 
-    constructor() ERC721("FreshFood", "FRF") {
-        _tokenIdCounter._value = 10000;
-    }
+    constructor() ERC721("FreshFood", "FRF") {}
 
     mapping(uint256 => Product) public products;
     mapping(address => Owner) public owners;
@@ -47,7 +46,11 @@ contract FreshFood is ERC721, Ownable {
         return _owner;
     }
 
-    function addProduct(string memory _name, string memory _origin) public {
+    function addProduct(
+        string memory _name,
+        string memory _origin,
+        string memory url
+    ) public {
         require(
             bytes(owners[msg.sender].name).length != 0,
             "You must register as owner first"
@@ -65,6 +68,7 @@ contract FreshFood is ERC721, Ownable {
         newProduct.name = _name;
         newProduct.origin = _origin;
         newProduct.verified = false;
+        newProduct.url = url;
 
         string memory ownerName = getOwnerByAddress(msg.sender).name;
         string memory ownerDecs = getOwnerByAddress(msg.sender).description;
