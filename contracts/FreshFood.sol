@@ -24,7 +24,7 @@ struct Product {
     Owner[] ownerList;
     Log[] logList;
     bool verified;
-    string url;
+    string image;
 }
 
 contract FreshFood is ERC721, Ownable {
