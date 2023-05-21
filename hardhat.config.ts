@@ -31,6 +31,10 @@ const config: HardhatUserConfig = {
       url: "http://localhost:8545",
       blockGasLimit: 100000000,
     },
+    production: {
+      url: "http://128.199.235.90:8545",
+      blockGasLimit: 100000000,
+    },
   },
 };
 
