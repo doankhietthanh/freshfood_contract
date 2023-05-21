@@ -32,7 +32,7 @@ const config: HardhatUserConfig = {
       blockGasLimit: 100000000,
     },
     production: {
-      url: "http://128.199.235.90:8545",
+      url: "https://eth.freshfood.lalo.com.vn",
       blockGasLimit: 100000000,
     },
   },
