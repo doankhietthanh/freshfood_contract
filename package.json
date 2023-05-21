@@ -5,6 +5,7 @@
   },
   "devDependencies": {
     "@ethersproject/providers": "^5.7.2",
+    "@faker-js/faker": "^8.0.1",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.6",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.8",
     "@nomicfoundation/hardhat-toolbox": "^2.0.2",
@@ -14,7 +15,9 @@
     "@typechain/hardhat": "^6.1.5",
     "@types/chai": "^4.3.4",
     "@types/mocha": "^10.0.1",
+    "axios": "^1.4.0",
     "chai": "^4.3.7",
+    "dayjs": "^1.11.7",
     "ethers": "^5.7.2",
     "hardhat": "^2.13.0",
     "hardhat-gas-reporter": "^1.0.9",

@@ -30,6 +30,8 @@ const config: HardhatUserConfig = {
     development: {
       url: "http://localhost:8545",
       blockGasLimit: 100000000,
+      gas: 2100000,
+      gasPrice: 8000000000,
     },
     production: {
       url: "https://eth.freshfood.lalo.com.vn",
