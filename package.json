@@ -3,6 +3,9 @@
   "dependencies": {
     "@openzeppelin/contracts": "^4.8.2"
   },
+  "scripts": {
+    "serve": "hardhat node"
+  },
   "devDependencies": {
     "@ethersproject/providers": "^5.7.2",
     "@faker-js/faker": "^8.0.1",
