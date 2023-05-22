@@ -36,6 +36,8 @@ const config: HardhatUserConfig = {
     production: {
       url: "https://eth.freshfood.lalo.com.vn",
       blockGasLimit: 100000000,
+      gas: 2100000,
+      gasPrice: 8000000000,
     },
   },
 };
