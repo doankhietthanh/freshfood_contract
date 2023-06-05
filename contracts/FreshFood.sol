@@ -193,6 +193,48 @@ contract FreshFood is ERC721, Ownable {
         return _products;
     }
 
+    function getProductByName(
+        string _name
+    ) public view returns (Product[] memory) {
+        Product[] memory _products = new Product[](_tokenIdCounter.current());
+        uint256 _count = 0;
+        for (uint256 i = 0; i < _tokenIdCounter.current(); i++) {
+            if (
+                keccak256(abi.encodePacked(products[i].name)) ==
+                keccak256(abi.encodePacked(_name))
+            ) {
+                _products[_count] = products[i];
+                _count++;
+            }
+        }
+        Product[] memory _products2 = new Product[](_count);
+        for (uint256 i = 0; i < _count; i++) {
+            _products2[i] = _products[i];
+        }
+        return _products2;
+    }
+
+    function getProductByOrigin(
+        string _origin
+    ) public view returns (Product[] memory) {
+        Product[] memory _products = new Product[](_tokenIdCounter.current());
+        uint256 _count = 0;
+        for (uint256 i = 0; i < _tokenIdCounter.current(); i++) {
+            if (
+                keccak256(abi.encodePacked(products[i].origin)) ==
+                keccak256(abi.encodePacked(_origin))
+            ) {
+                _products[_count] = products[i];
+                _count++;
+            }
+        }
+        Product[] memory _products2 = new Product[](_count);
+        for (uint256 i = 0; i < _count; i++) {
+            _products2[i] = _products[i];
+        }
+        return _products2;
+    }
+
     function checkProductVerified(
         uint256 _productId
     ) public view returns (bool) {
