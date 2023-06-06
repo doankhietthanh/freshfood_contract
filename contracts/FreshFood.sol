@@ -194,7 +194,7 @@ contract FreshFood is ERC721, Ownable {
     }
 
     function getProductByName(
-        string _name
+        string memory _name
     ) public view returns (Product[] memory) {
         Product[] memory _products = new Product[](_tokenIdCounter.current());
         uint256 _count = 0;
@@ -215,7 +215,7 @@ contract FreshFood is ERC721, Ownable {
     }
 
     function getProductByOrigin(
-        string _origin
+        string memory _origin
     ) public view returns (Product[] memory) {
         Product[] memory _products = new Product[](_tokenIdCounter.current());
         uint256 _count = 0;
