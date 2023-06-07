@@ -47,6 +47,20 @@ contract FreshFood is ERC721, Ownable {
         return _owner;
     }
 
+    function updateOwner(
+        string memory _name,
+        string memory _description
+    ) public returns (Owner memory) {
+        require(bytes(_name).length != 0, "Name must not be empty");
+        require(
+            bytes(owners[msg.sender].name).length != 0,
+            "You must register as owner first"
+        );
+        Owner memory _owner = Owner(_name, _description);
+        owners[msg.sender] = _owner;
+        return _owner;
+    }
+
     function addProduct(
         string memory _name,
         string memory _origin,

@@ -33,12 +33,32 @@ const random = (i: number) => {
   };
 };
 
+const randomLocation = () => {
+  return {
+    longitude: faker.location.longitude(),
+    latitude: faker.location.latitude(),
+  };
+};
+
+const wallet = "0x70997970C51812dc3A010C7d01b50e0d17dc79C8";
+const walletPrivateKey =
+  "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d";
+
 async function main() {
   const FreshFood = await ethers.getContractFactory("FreshFood");
 
   const freshFood = await FreshFood.deploy();
 
-  await freshFood.registerOwner("FRESH FOOD", "phamtanminhtien@gmail.com");
+  await freshFood.registerOwner("FRESH FOOD 1", "phamtanminhtien@gmail.com");
+
+  // connect to wallet
+  const walletSigner = new ethers.Wallet(walletPrivateKey, ethers.provider);
+  const walletContract = freshFood.connect(walletSigner);
+  // register wallet
+  await walletContract.registerOwner(
+    "FRESH FOOD 2",
+    "phamtanminhtien@gmail.com"
+  );
 
   // create 10 products
   for (let i = 0; i < 16; i++) {
@@ -80,6 +100,21 @@ async function main() {
         data._id,
         data.hash,
         "",
+        dayjs().add(j, "day").unix()
+      );
+    }
+
+    console.log("transfer product", i);
+    await freshFood.transferProduct(i, wallet);
+
+    for (let j = 11; j < 20; j++) {
+      console.log("add location", i, j);
+      const location = randomLocation();
+      await walletContract.addLog(
+        i,
+        "delivery",
+        "delivery",
+        location.longitude + "," + location.latitude,
         dayjs().add(j, "day").unix()
       );
     }
