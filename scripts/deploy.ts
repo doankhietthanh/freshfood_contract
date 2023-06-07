@@ -78,7 +78,7 @@ async function main() {
         data._id,
         data.hash,
         "",
-        dayjs().add(i, "day").unix()
+        dayjs().add(j, "day").unix()
       );
     }
   }
