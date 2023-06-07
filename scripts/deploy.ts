@@ -38,7 +38,7 @@ async function main() {
 
   const freshFood = await FreshFood.deploy();
 
-  await freshFood.registerOwner("Công ty TNHH Lalo", "https://lalo.com.vn");
+  await freshFood.registerOwner("FRESH FOOD", "phamtanminhtien@gmail.com");
 
   // create 10 products
   for (let i = 0; i < 16; i++) {
@@ -52,7 +52,7 @@ async function main() {
 
     for (let j = 0; j < 10; j++) {
       const res = await axios.post(
-        "http://localhost:8080/object-stores",
+        "https://be.freshfood.lalo.com.vn/object-stores",
         random(j),
         {
           headers: {
