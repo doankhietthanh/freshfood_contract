@@ -42,6 +42,7 @@ async function main() {
 
   // create 10 products
   for (let i = 0; i < 16; i++) {
+    console.log("create product", i);
     await freshFood.addProduct(
       faker.commerce.productName(),
       faker.location.streetAddress(),
@@ -73,6 +74,7 @@ async function main() {
         }
       );
       const { data } = res;
+      console.log("add log", i, j);
       await freshFood.addLog(
         i,
         data._id,
