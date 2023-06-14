@@ -34,9 +34,29 @@ const random = (i: number) => {
 };
 
 const randomLocation = () => {
+  const centerLatitude = 10.849875407769426;
+  const centerLongitude = 106.77471695504762;
+  const maxRadius = 20; // In kilometers
+
+  // Convert max radius to radians
+  const r = maxRadius / 111;
+
+  const y0 = centerLatitude;
+  const x0 = centerLongitude;
+  const u = Math.random();
+  const v = Math.random();
+  const w = r * Math.sqrt(u);
+  const t = 2 * Math.PI * v;
+  const x = w * Math.cos(t);
+  const y1 = w * Math.sin(t);
+  const x1 = x / Math.cos(y0);
+
+  const newY = y0 + y1;
+  const newX = x0 + x1;
+
   return {
-    longitude: faker.location.longitude(),
-    latitude: faker.location.latitude(),
+    latitude: newY,
+    longitude: newX,
   };
 };
 
@@ -114,7 +134,7 @@ async function main() {
         i,
         "delivery",
         "delivery",
-        location.longitude + "," + location.latitude,
+        location.latitude + "," + location.longitude,
         dayjs().add(j, "day").unix()
       );
     }
