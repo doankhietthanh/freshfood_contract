@@ -60,16 +60,15 @@ const randomLocation = () => {
   };
 };
 
-const wallet = "0x70997970C51812dc3A010C7d01b50e0d17dc79C8";
-const walletPrivateKey =
-  "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d";
+const wallet = process.env.WALLET_ADDRESS || "";
+const walletPrivateKey = process.env.WALLET_PRIVATE_KEY || "";
 
 async function main() {
   const FreshFood = await ethers.getContractFactory("FreshFood");
 
   const freshFood = await FreshFood.deploy();
 
-  await freshFood.registerOwner("FRESH FOOD 1", "phamtanminhtien@gmail.com");
+  await freshFood.registerOwner("FRESH FOOD 1", "doankhietthanh@gmail.com");
 
   // connect to wallet
   const walletSigner = new ethers.Wallet(walletPrivateKey, ethers.provider);
@@ -77,11 +76,11 @@ async function main() {
   // register wallet
   await walletContract.registerOwner(
     "FRESH FOOD 2",
-    "phamtanminhtien@gmail.com"
+    "doankhietthanh@gmail.com"
   );
 
   // create 10 products
-  for (let i = 0; i < 16; i++) {
+  for (let i = 0; i < 5; i++) {
     console.log("create product", i);
     await freshFood.addProduct(
       faker.commerce.productName(),
@@ -91,9 +90,9 @@ async function main() {
       })
     );
 
-    for (let j = 0; j < 10; j++) {
+    for (let j = 0; j < 5; j++) {
       const res = await axios.post(
-        "https://be.freshfood.lalo.com.vn/object-stores",
+        `${process.env.SERVER}/object-stores`,
         random(j),
         {
           headers: {
@@ -127,7 +126,7 @@ async function main() {
     console.log("transfer product", i);
     await freshFood.transferProduct(i, wallet);
 
-    for (let j = 11; j < 20; j++) {
+    for (let j = 5; j < 10; j++) {
       console.log("add location", i, j);
       const location = randomLocation();
       await walletContract.addLog(

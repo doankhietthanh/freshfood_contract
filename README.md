@@ -1,13 +1,25 @@
-# Sample Hardhat Project
+# Blockchain IoT For FreshFood Application
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+### Introduction
 
-Try running some of the following tasks:
+[Freshfood Introduction](https://github.com/phamtanminhtien/freshfood-fe)
+
+### Setup .env file
+
+```js
+SERVER=
+INFURA_API_KEY=
+SEPOLIA_PRIVATE_KEY=
+WALLET_PRIVATE_KEY=
+WALLET_ADDRESS=
+```
+
+### Shell command
 
 ```shell
 npx hardhat help
 npx hardhat test
 REPORT_GAS=true npx hardhat test
 npx hardhat node
-npx hardhat run scripts/deploy.ts
+npx hardhat run scripts/deploy.ts --network development
 ```

@@ -1,10 +1,6 @@
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
-
-const INFURA_API_KEY = "ePW1u9KOntXwqMxIlLYstlx0ZiuGGPrg";
-
-const SEPOLIA_PRIVATE_KEY =
-  "844c3fcd6824f0141c87def50180af77cf7ab62289d17d16d404c8e22d9b3b79";
+import "dotenv/config";
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -25,16 +21,23 @@ const config: HardhatUserConfig = {
   networks: {
     sepolia: {
       url: `https://eth-sepolia.g.alchemy.com/v2/ePW1u9KOntXwqMxIlLYstlx0ZiuGGPrg`,
-      accounts: [SEPOLIA_PRIVATE_KEY],
+      accounts: [process.env.SEPOLIA_PRIVATE_KEY || ""],
     },
     development: {
-      url: "http://localhost:8545",
+      url: "http://127.0.0.1:8545",
       blockGasLimit: 100000000,
       gas: 2100000,
       gasPrice: 8000000000,
     },
     production: {
       url: "https://eth.freshfood.lalo.com.vn",
+      blockGasLimit: 100000000,
+      gas: 2100000,
+      gasPrice: 8000000000,
+    },
+    infura: {
+      url: `https://sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      accounts: [process.env.SEPOLIA_PRIVATE_KEY || ""],
       blockGasLimit: 100000000,
       gas: 2100000,
       gasPrice: 8000000000,
